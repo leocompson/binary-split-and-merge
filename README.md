@@ -1,4 +1,4 @@
-Binary Split & Merge is an extension that helps you easily split the input file into several segments. Likewise, if you have several file chunks, this app can merge all segments. Please adjust the settings for each part before operate.
+Binary Split & Merge is an extension that helps you easily split a file into several segments. Likewise, if you have several file chunks, this app can merge all segments. Please adjust the settings for each part before operate.
 
 If you want to split the input file, please set the desired number of segments. Alternatively, you can set the preferred file chunk size. For the merge operation, you need to add the resulting file extension or type. There are several file types and extensions to choose from the dropdown list. Once these settings are adjusted please press on the split or merge buttons to operate.
 
