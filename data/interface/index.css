@@ -1,0 +1,272 @@
+body {
+  margin: 0;
+  border: 0;
+  height: 100vh;
+  display: grid;
+  padding: 0 44px;
+  font-family: arial,sans-serif;
+  grid-template-rows: 1fr min-content;
+}
+
+.toolbar {
+  top: 5px;
+  right: 5px;
+  z-index: 11;
+  position: absolute;
+}
+
+.toolbar table {
+  border-spacing: 0;
+  table-layout: fixed;
+}
+
+.toolbar table tr td {
+  padding: 0;
+  width: 32px;
+  color: #777;
+  height: 32px;
+  font-size: 12px;
+  cursor: pointer;
+  user-select: none;
+  text-align: center;
+  font-family: arial,sans-serif;
+}
+
+.toolbar table tr td:hover {
+  background-color: rgba(0,0,0,0.05);
+}
+
+.toolbar table tr td svg {
+  fill: #777;
+  pointer-events: none;
+  vertical-align: middle;
+}
+
+.fileio {
+  width: 100%;
+  margin: 5px auto;
+  text-align: center;
+  border: solid 1px rgba(0,0,0,0.1);
+}
+
+.fileio table {
+  border: 0;
+  width: 100%;
+  height: 100%;
+  border-spacing: 1px 0;
+}
+
+.fileio-td {
+  padding: 0;
+  position: relative;
+  background-color: #fff;
+  background: #fff url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAYAAADDPmHLAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAPYQAAD2EBqD+naQAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAIvSURBVHic7d2xLgRRGEfx79oRvRCFjgQVkn0QNJ5EIRGyhda7SDyHUiOhYAsiNqEk66psqGTEdUfO+XWT7Jf8i5NMscVESOJKtQeUNhjEVLO5vNj2rnnJz/u7108lNnVJU3tAcf2V2Twe37Q9e51JJxGxV2BRp0zVHqC6DADOAOAMAM4A4AwAzgDgDADOAOAMAM4A4AwAzgDgDADOAOAMAM4A4AwAzgDgDADOAOAMAM4A4AwAzgDgDADOAOAMAM4A4AwAzgDgDADOAOAMAM4A4AwAzgDgDADOAOAMAM4A4AwAzgDgDADOAOAMAM4A4AwAzgDgDADOAOAMAM4A4CafjTs+Xd7JEQc1xxSRUhM5b7S/i/vIMSywqKqcY3i0c7X98Tz5bNxbjvmUol9nVkE5//AuFiJi4Ve3dEBKefbzs68AOAOAMwA4A4AzADgDgDMAOAOAMwA4A4AzALjJfwEppVFEvqg5poScUi/lvPaD08eIuPvtPfWl2y9PtWb8lcHZylxvPH5ofZji5HDraq/ApE7xFQBnAHAGAGcAcAYAZwBwBgBnAHAGAGcAcAYAZwBwBgBnAHAGAGcAcAYAZwBwBgBnAHAGAGcAcAYAZwBwBgBnAHAGAGcAcAYAZwBwBgBnAHAGAGcAcAYAZwBwBgBnAHAGAGcAcAYAZwBwBgBnAHAGAGcAcAYAZwBwBgBnAHAGAGcAcAYA13z/k3/u/HLUW19abXv2Mt2MSsyRpO54BxisNnYwXujbAAAAAElFTkSuQmCC") no-repeat center center;
+  background-size: 16px;
+}
+
+.fileio-td .info,
+.fileio-td .details {
+  left: 0;
+  width: 100%;
+  color: #777777;
+  font-size: 12px;
+  user-select: none;
+  position: absolute;
+  text-align: center;
+  pointer-events: none;
+  font-family: monospace;
+}
+
+.fileio-td .info {
+  top: calc(50% + 24px);
+}
+
+.fileio-td .details {
+  bottom: 10px;
+  text-align: left;
+  text-indent: 10px;
+}
+
+.fileio-td input {
+  top: 5px;
+  left: 5px;
+  border: 0;
+  color: #777;
+  height: 100%;
+  margin: auto;
+  cursor: pointer;
+  font-size: 12px;
+  text-align: left;
+  position: absolute;
+  font-family: monospace;
+  width: calc(100% - 10px);
+  height: calc(100% - 10px);
+  background-color: transparent;
+}
+
+.fileio-td input:focus {
+  outline: none;
+}
+
+.actions {
+  width: 100%;
+  margin: 5px auto;
+  background-color: #fff;
+  border: solid 1px rgba(0,0,0,0.1);
+}
+
+.actions .left {
+  float: left;
+  line-height: 32px;
+}
+
+.actions .right {
+  float: right;
+  line-height: 32px;
+}
+
+.actions table {
+  border: 0;
+  padding: 0;
+  width: 100%;
+  border-spacing: 0;
+}
+
+.actions table tr td {
+  height: 42px;
+  padding: 5px 10px;
+}
+
+.actions table tr td:nth-child(1) {
+  width: calc(50vw - 12px);
+  border-right: solid 1px rgba(0,0,0,0.1);
+}
+
+.actions table tr td:nth-child(3) {
+  width: calc(50vw - 12px);
+  border-left: solid 1px rgba(0,0,0,0.1);
+}
+
+.actions table tr td svg {
+  fill: #777777;
+  pointer-events: none;
+}
+
+.actions table tr td select {
+  color: #555;
+  width: 150px;
+  padding: 7px;
+  outline: none;
+  font-size: 12px;
+  background: #fff;
+  font-family: monospace;
+  border: solid 1px rgba(0,0,0,0.2);
+}
+
+.actions table tr td label {
+  padding: 0;
+  color: #555;
+  font-size: 12px;
+  overflow: hidden;
+  user-select: none;
+  white-space: nowrap;
+  vertical-align: middle;
+  text-overflow: ellipsis;
+  font-family: arial, sans-serif;
+}
+
+.actions table tr td input[type='number'] {
+  width: 64px;
+  color: #555;
+  padding: 7px;
+  outline: none;
+  font-size: 12px;
+  font-family: monospace;
+  border: solid 1px rgba(0,0,0,0.2);
+}
+
+.actions table tr td input[type='radio'] {
+  margin: 3px;
+  margin-left: 5px;
+  vertical-align: middle;
+}
+
+.actions .separator {
+  height: 16px;
+  padding: 0 5px;
+}
+
+.actions .separator label {
+  color: #929292;
+  padding: 5px 15px;
+}
+
+.actions .separator svg {
+  fill: #5a85df;
+  pointer-events: none;
+  vertical-align: middle;
+}
+
+.actions .button {
+  border: 0;
+  padding: 5px 0;
+  cursor: pointer;
+}
+
+.actions .button div {
+  color: #fff;
+  margin: auto;
+  height: 38px;
+  opacity: 0.95;
+  cursor: pointer;
+  overflow: hidden;
+  line-height: 38px;
+  text-align: center;
+  width: calc(100% - 15px);
+  background-color: #517edd;
+  transition: 300ms ease all;
+}
+
+.actions .button div:hover {
+  opacity: 1.0;
+}
+
+.button div .b {display: none}
+.button div .a {display: inline}
+.button div[state='loading'] .a {display: none}
+.button div[state='loading'] .b {display: inline}
+
+html[context="webapp"] .toolbar {
+  display: none;
+}
+
+@media (max-width: 700px) {
+  body {padding: 0 5px}
+  /*  */
+  .toolbar {top: 5px}
+  .fileio input {opacity: 0}
+  #chunks {width: calc(100% - 78px)}
+  #filesize {width: calc(100% - 16px)}
+  .actions table tr td {padding: 0 5px}
+  .actions table tr td select {width: 100%}
+  .fileio, .actions {width: calc(100% - 2px)}
+  .actions .left, .actions .right {float: none}
+  .actions table tr td:nth-child(2) {padding: 1px}
+  .toolbar, .actions .separator svg {display: none}
+  .actions .separator {
+    padding: 0;
+    height: 32px;
+    text-align: center;
+  }
+  .actions .separator label {
+    padding: 0;
+    height: 28px;
+    line-height: 28px;
+  }
+}
+
+@media (max-width: 400px) {
+  .toolbar, .fileio-td .info {
+    display: none;
+  }
+}
