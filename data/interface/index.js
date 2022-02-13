@@ -1,7 +1,72 @@
+var background = {
+  "port": null,
+  "message": {},
+  "receive": function (id, callback) {
+    if (id) {
+      background.message[id] = callback;
+    }
+  },
+  "connect": function (port) {
+    chrome.runtime.onMessage.addListener(background.listener); 
+    /*  */
+    if (port) {
+      background.port = port;
+      background.port.onMessage.addListener(background.listener);
+      background.port.onDisconnect.addListener(function () {
+        background.port = null;
+      });
+    }
+  },
+  "send": function (id, data) {
+    if (id) {
+      if (context !== "webapp") {
+        chrome.runtime.sendMessage({
+          "method": id,
+          "data": data,
+          "path": "interface-to-background"
+        }); 
+      }
+    }
+  },
+  "post": function (id, data) {
+    if (id) {
+      if (background.port) {
+        background.port.postMessage({
+          "method": id,
+          "data": data,
+          "port": background.port.name,
+          "path": "interface-to-background"
+        });
+      }
+    }
+  },
+  "listener": function (e) {
+    if (e) {
+      for (var id in background.message) {
+        if (background.message[id]) {
+          if ((typeof background.message[id]) === "function") {
+            if (e.path === "background-to-interface") {
+              if (e.method === id) {
+                background.message[id](e.data);
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+};
+
 var config  = {
   "resize": {"timeout": null},
-  "split": {"buffers": [], "element": null},
-  "merge": {"buffers": [], "element": null},
+  "split": {
+    "buffers": [], 
+    "element": null
+  },
+  "merge": {
+    "buffers": [], 
+    "element": null
+  },
   "file": {
     "type": null, 
     "name": null,
@@ -50,9 +115,47 @@ var config  = {
       }
     }
   },
+  "resize": {
+    "timeout": null,
+    "method": function () {
+      if (config.port.name === "win") {
+        if (config.resize.timeout) window.clearTimeout(config.resize.timeout);
+        config.resize.timeout = window.setTimeout(async function () {
+          var current = await chrome.windows.getCurrent();
+          /*  */
+          config.storage.write("interface.size", {
+            "top": current.top,
+            "left": current.left,
+            "width": current.width,
+            "height": current.height
+          });
+        }, 1000);
+      }
+    }
+  },
+  "port": {
+    "name": '',
+    "connect": function () {
+      config.port.name = "webapp";
+      var context = document.documentElement.getAttribute("context");
+      /*  */
+      if (chrome.runtime) {
+        if (chrome.runtime.connect) {
+          if (context !== config.port.name) {
+            if (document.location.search === "?win") config.port.name = "win";
+            background.connect(chrome.runtime.connect({"name": config.port.name}));
+          }
+        }
+      }
+      /*  */
+      document.documentElement.setAttribute("context", config.port.name);
+    }
+  },
   "storage": {
     "local": {},
-    "read": function (id) {return config.storage.local[id]},
+    "read": function (id) {
+      return config.storage.local[id];
+    },
     "load": function (callback) {
       chrome.storage.local.get(null, function (e) {
         config.storage.local = e;
@@ -80,17 +183,18 @@ var config  = {
         /*  */
         for (id in config.map.data) {
           for (var i = 0; i < config.map.data[id].length; i++) {
+            var extensions = config.map.data[id];
+            var extension = extensions[i];
             var type = id;
-            var extensions = config.map.data[type];
             /*  */
             var option = document.createElement("option");
             option.value = type;
-            option.textContent = type;
+            option.textContent = type + ' >> ' + extension;
             config.drop.type.appendChild(option);
             /*  */
             var option = document.createElement("option");
-            option.value = extensions[i];
-            option.textContent = extensions[i];
+            option.value = extension;
+            option.textContent = extension + ' >> ' + type;
             config.drop.extension.appendChild(option);
           }
         }
@@ -163,44 +267,70 @@ var config  = {
       }
     }
   },
+  "load": function () {
+    var reload = document.getElementById("reload");
+    var support = document.getElementById("support");
+    var donation = document.getElementById("donation");
+    /*  */
+    config.drop.size = document.getElementById("filesize");
+    config.drop.type = document.getElementById("filetype");
+    config.drop.chunks = document.getElementById("chunks");
+    config.split.element = document.getElementById("split");
+    config.merge.element = document.getElementById("merge");
+    config.drop.element = document.getElementById("fileio");
+    config.drop.extension = document.getElementById("fileextension");
+    config.drop.radio = [...document.querySelectorAll("input[type=radio]")];
+    /*  */
+    config.drop.element.addEventListener("change", config.listeners.drop, false);
+    config.split.element.addEventListener("click", config.listeners.split, false);
+    config.merge.element.addEventListener("click", config.listeners.merge, false);
+    /*  */
+    reload.addEventListener("click", function () {
+      document.location.reload();
+    }, false);
+    /*  */
+    support.addEventListener("click", function () {
+      var url = config.addon.homepage();
+      chrome.tabs.create({"url": url, "active": true});
+    }, false);
+    /*  */
+    donation.addEventListener("click", function () {
+      var url = config.addon.homepage() + "?reason=support";
+      chrome.tabs.create({"url": url, "active": true});
+    }, false);
+    /*  */
+    config.drop.type.addEventListener("change", function (e) {
+      config.drop.extension.selectedIndex = e.target.selectedIndex;
+      config.store.interface.metrics();
+    }, false);
+    /*  */
+    config.drop.extension.addEventListener("change", function (e) {
+      config.drop.type.selectedIndex = e.target.selectedIndex;
+      config.store.interface.metrics();
+    }, false);
+    /*  */
+    config.drop.chunks.addEventListener("change", function () {
+      config.drop.radio.map(e => {e.checked = false});
+      config.drop.size.value = '';
+      config.update.interface();
+    }, false);
+    /*  */
+    config.drop.size.addEventListener("change", function () {
+      config.drop.chunks.value = '';
+      config.update.interface();
+    }, false);
+    /*  */
+    config.drop.radio.map(function (e) {
+      e.addEventListener("change", function () {
+        config.drop.chunks.value = '';
+        config.update.interface();
+      }, false);
+    });
+    /*  */
+    config.storage.load(config.app.start);
+    window.removeEventListener("load", config.load, false);
+  },
   "update": {
-    "active": function () {
-      var a = [...document.querySelectorAll(".actions table tr td div")];
-      var b = [...document.querySelectorAll(".actions table tr td input")];
-      var c = [...document.querySelectorAll(".actions table tr td label")];
-      var d = [...document.querySelectorAll(".actions table tr td select")];
-      //
-      [...a, ...b, ...c, ...d].map(e => {
-        e.disabled = true;
-        e.closest("td").style.opacity = "0.50";
-        e.closest("td").style.cursor = "not-allowed";
-        e.closest("td").style.backgroundColor = "#ffffff";
-      });
-      /*  */
-      var a = [...document.querySelectorAll(".actions[role='split'] table tr td:nth-child(1) div")];
-      var b = [...document.querySelectorAll(".actions[role='split'] table tr td:nth-child(1) input")];
-      var c = [...document.querySelectorAll(".actions[role='split'] table tr td:nth-child(1) label")];
-      var d = [...document.querySelectorAll(".actions[role='split'] table tr td:nth-child(1) select")];
-      //
-      [...a, ...b, ...c, ...d].map(e => {
-        e.disabled = false;
-        e.closest("td").style.opacity = "1.00";
-        e.closest("td").style.cursor = "default";
-        e.closest("td").style.backgroundColor = "#f5f5f5";
-      });
-      /*  */
-      var a = [...document.querySelectorAll(".actions[role='merge'] table tr td:nth-child(3) div")];
-      var b = [...document.querySelectorAll(".actions[role='merge'] table tr td:nth-child(3) input")];
-      var c = [...document.querySelectorAll(".actions[role='merge'] table tr td:nth-child(3) label")];
-      var d = [...document.querySelectorAll(".actions[role='merge'] table tr td:nth-child(3) select")];
-      //
-      [...a, ...b, ...c, ...d].map(e => {
-        e.disabled = false;
-        e.closest("td").style.opacity = "1.00";
-        e.closest("td").style.cursor = "default";
-        e.closest("td").style.backgroundColor = "#f5f5f5";
-      });
-    },
     "interface": function () {
       if (config.drop.current) {
         if (config.drop.current.type) {
@@ -238,6 +368,46 @@ var config  = {
       }
       /*  */
       config.store.interface.metrics();
+    },
+    "active": function () {
+      var a = [...document.querySelectorAll(".actions table tr td div")];
+      var b = [...document.querySelectorAll(".actions table tr td input")];
+      var c = [...document.querySelectorAll(".actions table tr td label")];
+      var d = [...document.querySelectorAll(".actions table tr td select")];
+      //
+      [...a, ...b, ...c, ...d].map(e => {
+        e.disabled = true;
+        e.closest("td").style.opacity = "0.50";
+        e.closest("td").style.fontWeight = "normal";
+        e.closest("td").style.cursor = "not-allowed";
+        e.closest("td").style.backgroundColor = "#ffffff";
+      });
+      /*  */
+      var a = [...document.querySelectorAll(".actions[role='split'] table tr td:nth-child(1) div")];
+      var b = [...document.querySelectorAll(".actions[role='split'] table tr td:nth-child(1) input")];
+      var c = [...document.querySelectorAll(".actions[role='split'] table tr td:nth-child(1) label")];
+      var d = [...document.querySelectorAll(".actions[role='split'] table tr td:nth-child(1) select")];
+      //
+      [...a, ...b, ...c, ...d].map(e => {
+        e.disabled = false;
+        e.closest("td").style.opacity = "1.00";
+        e.closest("td").style.cursor = "default";
+        e.closest("td").style.fontWeight = "600";
+        e.closest("td").style.backgroundColor = "#f5f5f5";
+      });
+      /*  */
+      var a = [...document.querySelectorAll(".actions[role='merge'] table tr td:nth-child(2) div")];
+      var b = [...document.querySelectorAll(".actions[role='merge'] table tr td:nth-child(2) input")];
+      var c = [...document.querySelectorAll(".actions[role='merge'] table tr td:nth-child(2) label")];
+      var d = [...document.querySelectorAll(".actions[role='merge'] table tr td:nth-child(2) select")];
+      //
+      [...a, ...b, ...c, ...d].map(e => {
+        e.disabled = false;
+        e.closest("td").style.opacity = "1.00";
+        e.closest("td").style.cursor = "default";
+        e.closest("td").style.fontWeight = "600";
+        e.closest("td").style.backgroundColor = "#f5f5f5";
+      });
     }
   },
   "listeners": {
@@ -333,75 +503,9 @@ var config  = {
   }
 };
 
-var load = function () {
-  var reload = document.getElementById("reload");
-  var support = document.getElementById("support");
-  var donation = document.getElementById("donation");
-  /*  */
-  config.drop.size = document.getElementById("filesize");
-  config.drop.type = document.getElementById("filetype");
-  config.drop.chunks = document.getElementById("chunks");
-  config.split.element = document.getElementById("split");
-  config.merge.element = document.getElementById("merge");
-  config.drop.element = document.getElementById("fileio");
-  config.drop.extension = document.getElementById("fileextension");
-  config.drop.radio = [...document.querySelectorAll("input[type=radio]")];
-  /*  */
-  config.drop.element.addEventListener("change", config.listeners.drop, false);
-  config.split.element.addEventListener("click", config.listeners.split, false);
-  config.merge.element.addEventListener("click", config.listeners.merge, false);
-  /*  */
-  config.drop.type.addEventListener("change", function (e) {
-    config.drop.extension.selectedIndex = e.target.selectedIndex;
-    config.store.interface.metrics();
-  }, false);
-  /*  */
-  config.drop.extension.addEventListener("change", function (e) {
-    config.drop.type.selectedIndex = e.target.selectedIndex;
-    config.store.interface.metrics();
-  }, false);
-  /*  */
-  config.drop.chunks.addEventListener("change", function () {
-    config.drop.radio.map(e => {e.checked = false});
-    config.drop.size.value = '';
-    config.update.interface();
-  }, false);
-  /*  */
-  config.drop.size.addEventListener("change", function () {
-    config.drop.chunks.value = '';
-    config.update.interface();
-  }, false);
-  /*  */
-  config.drop.radio.map(function (e) {
-    e.addEventListener("change", function () {
-      config.drop.chunks.value = '';
-      config.update.interface();
-    }, false);
-  });
-  /*  */
-  support.addEventListener("click", function () {
-    var url = config.addon.homepage();
-    chrome.tabs.create({"url": url, "active": true});
-  }, false);
-  /*  */
-  donation.addEventListener("click", function () {
-    var url = config.addon.homepage() + "?reason=support";
-    chrome.tabs.create({"url": url, "active": true});
-  }, false);
-  /*  */
-  config.storage.load(config.app.start);
-  window.removeEventListener("load", load, false);
-  reload.addEventListener("click", function (e) {document.location.reload()}, false);
-};
+config.port.connect();
 
-window.addEventListener("resize", function () {
-  if (config.resize.timeout) window.clearTimeout(config.resize.timeout);
-  config.resize.timeout = window.setTimeout(function () {
-    config.storage.write("width", window.innerWidth || window.outerWidth);
-    config.storage.write("height", window.innerHeight || window.outerHeight);
-  }, 1000);
-}, false);
-
-window.addEventListener("load", load, false);
+window.addEventListener("load", config.load, false);
+window.addEventListener("resize", config.resize.method, false);
 window.addEventListener("dragover", function (e) {e.preventDefault()});
 window.addEventListener("drop", function (e) {if (e.target.id !== "fileio") e.preventDefault()});

@@ -1,18 +1,20 @@
 body {
+  gap: 10px;
   margin: 0;
   border: 0;
-  height: 100vh;
-  display: grid;
-  padding: 0 44px;
-  font-family: arial,sans-serif;
-  grid-template-rows: 1fr min-content;
+  padding: 0;
+  display: flex;
+  font-size: 12px;
+  overflow: hidden;
+  flex-flow: column;
+  font-family: monospace;
 }
 
 .toolbar {
-  top: 5px;
-  right: 5px;
+  top: 0;
+  right: 0;
   z-index: 11;
-  position: absolute;
+  position: fixed;
 }
 
 .toolbar table {
@@ -22,14 +24,14 @@ body {
 
 .toolbar table tr td {
   padding: 0;
-  width: 32px;
+  width: 42px;
   color: #777;
-  height: 32px;
+  height: 42px;
   font-size: 12px;
   cursor: pointer;
   user-select: none;
   text-align: center;
-  font-family: arial,sans-serif;
+  font-family: monospace;
 }
 
 .toolbar table tr td:hover {
@@ -43,10 +45,12 @@ body {
 }
 
 .fileio {
+  flex: 1;
   width: 100%;
-  margin: 5px auto;
+  margin: 0 auto;
   text-align: center;
-  border: solid 1px rgba(0,0,0,0.1);
+  box-sizing: border-box;
+  border-bottom: solid 1px rgba(0,0,0,0.1);
 }
 
 .fileio table {
@@ -64,43 +68,45 @@ body {
   background-size: 16px;
 }
 
-.fileio-td .info,
-.fileio-td .details {
+.fileio-td .info, .fileio-td .details {
   left: 0;
-  width: 100%;
-  color: #777777;
+  color: #555;
   font-size: 12px;
+  overflow: hidden;
   user-select: none;
   position: absolute;
   text-align: center;
+  white-space: nowrap;
   pointer-events: none;
   font-family: monospace;
+  text-overflow: ellipsis;
 }
 
 .fileio-td .info {
-  top: calc(50% + 24px);
+  left: 10px;
+  bottom: 10px;
+  text-align: left;
 }
 
 .fileio-td .details {
+  right: 10px;
   bottom: 10px;
-  text-align: left;
+  text-align: right;
   text-indent: 10px;
 }
 
 .fileio-td input {
-  top: 5px;
-  left: 5px;
+  top: 0;
   border: 0;
-  color: #777;
-  height: 100%;
+  color: #555;
+  width: 100%;
   margin: auto;
+  padding: 10px;
   cursor: pointer;
   font-size: 12px;
-  text-align: left;
-  position: absolute;
   font-family: monospace;
-  width: calc(100% - 10px);
-  height: calc(100% - 10px);
+  box-sizing: border-box;
+  height: calc(100vh - 320px);
   background-color: transparent;
 }
 
@@ -110,19 +116,10 @@ body {
 
 .actions {
   width: 100%;
-  margin: 5px auto;
+  margin: 0 auto;
   background-color: #fff;
-  border: solid 1px rgba(0,0,0,0.1);
-}
-
-.actions .left {
-  float: left;
-  line-height: 32px;
-}
-
-.actions .right {
-  float: right;
-  line-height: 32px;
+  box-sizing: border-box;
+  border-top: solid 1px rgba(0,0,0,0.1);
 }
 
 .actions table {
@@ -130,82 +127,88 @@ body {
   padding: 0;
   width: 100%;
   border-spacing: 0;
+  table-layout: fixed;
 }
 
 .actions table tr td {
-  height: 42px;
-  padding: 5px 10px;
+  padding: 10px;
+}
+
+.actions table tr td div {
+  border: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 .actions table tr td:nth-child(1) {
-  width: calc(50vw - 12px);
   border-right: solid 1px rgba(0,0,0,0.1);
 }
 
 .actions table tr td:nth-child(3) {
-  width: calc(50vw - 12px);
   border-left: solid 1px rgba(0,0,0,0.1);
 }
 
 .actions table tr td svg {
-  fill: #777777;
+  fill: #777;
   pointer-events: none;
 }
 
 .actions table tr td select {
+  padding: 0;
   color: #555;
-  width: 150px;
-  padding: 7px;
+  width: 100%;
+  height: 42px;
   outline: none;
   font-size: 12px;
   background: #fff;
+  text-indent: 5px;
   font-family: monospace;
-  border: solid 1px rgba(0,0,0,0.2);
+  border: solid 1px rgba(0,0,0,0.1);
 }
 
 .actions table tr td label {
-  padding: 0;
   color: #555;
+  padding: 10px 0;
   font-size: 12px;
+  max-width: 100%;
   overflow: hidden;
   user-select: none;
   white-space: nowrap;
+  display: inline-block;
   vertical-align: middle;
+  font-family: monospace;
   text-overflow: ellipsis;
-  font-family: arial, sans-serif;
 }
 
 .actions table tr td input[type='number'] {
-  width: 64px;
+  margin: 0;
+  padding: 0;
+  width: 100%;
   color: #555;
-  padding: 7px;
+  height: 42px;
   outline: none;
   font-size: 12px;
   background: #fff;
+  text-indent: 10px;
   font-family: monospace;
-  border: solid 1px rgba(0,0,0,0.2);
+  box-sizing: border-box;
+  border: solid 1px rgba(0,0,0,0.1);
 }
 
 .actions table tr td input[type='radio'] {
-  margin: 3px;
-  margin-left: 5px;
+  margin: 10px;
   vertical-align: middle;
 }
 
 .actions .separator {
-  height: 16px;
-  padding: 0 5px;
-}
-
-.actions .separator label {
-  color: #929292;
-  padding: 5px 15px;
-}
-
-.actions .separator svg {
-  fill: #5a85df;
-  pointer-events: none;
-  vertical-align: middle;
+  padding: 0;
+  color: #555;
+  height: 28px;
+  font-weight: 600;
+  user-select: none;
+  text-align: center;
+  letter-spacing: 1px;
+  background-color: whitesmoke;
 }
 
 .actions .button {
@@ -217,13 +220,15 @@ body {
 .actions .button div {
   color: #fff;
   margin: auto;
-  height: 38px;
+  height: 42px;
   opacity: 0.95;
   cursor: pointer;
   font-size: 12px;
   overflow: hidden;
-  line-height: 38px;
+  font-weight: 600;
+  line-height: 42px;
   text-align: center;
+  letter-spacing: 1px;
   width: calc(100% - 15px);
   background-color: #517edd;
   transition: 300ms ease all;
@@ -238,37 +243,18 @@ body {
 .button div[state='loading'] .a {display: none}
 .button div[state='loading'] .b {display: inline}
 
-html[context="webapp"] .toolbar {
-  display: none;
-}
-
-@media (max-width: 700px) {
-  body {padding: 0 5px}
-  /*  */
-  .toolbar {top: 5px}
-  .fileio input {opacity: 0}
-  #chunks {width: calc(100% - 78px)}
-  #filesize {width: calc(100% - 16px)}
-  .actions table tr td {padding: 0 5px}
-  .actions table tr td select {width: 100%}
-  .fileio, .actions {width: calc(100% - 2px)}
-  .actions .left, .actions .right {float: none}
-  .actions table tr td:nth-child(2) {padding: 1px}
-  .toolbar, .actions .separator svg {display: none}
-  .actions .separator {
-    padding: 0;
-    height: 32px;
-    text-align: center;
-  }
-  .actions .separator label {
-    padding: 0;
-    height: 28px;
-    line-height: 28px;
+@media (max-width: 600px) {
+  .fileio-td input {
+    height: 150px;
   }
 }
 
-@media (max-width: 400px) {
+@media (max-width: 300px) {
   .toolbar, .fileio-td .info {
     display: none;
   }
+}
+
+html[context="webapp"] .toolbar {
+  display: none;
 }

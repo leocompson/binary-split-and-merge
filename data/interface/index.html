@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html>
 	<head>
+    <meta charset="utf-8">
 		<title>Binary Split & Merge</title>
-		<link rel="stylesheet" type="text/css" href="index.css">
-		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link type="text/css" rel="stylesheet" href="index.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 	</head>
 	<body>
 		<div class="toolbar">
@@ -47,62 +48,29 @@
 				<tr>
 					<td>
 						<div class="left">
-							<label for="chunks">Split the input file into</label>
+							<label for="chunks">1.a - Number of segments to split the input file</label>
 						</div>
 						<div class="right">
-							<input id="chunks" type="number" min=1><label> segments.</label>
+							<input id="chunks" type="number" min=1>
 						</div>
 					</td>
-					<td></td>
 					<td>
 						<div class="left">
-							<label for="filetype">Choose a file type</label>
+							<label for="filetype">2.a - Choose a file type</label>
 						</div>
 						<div class="right">
 							<select id="filetype"></select>
 						</div>
 					</td>
 				</tr>
-				<tr>
-					<td class="separator">
-						<label>OR</label>
-					</td>
-					<td class="separator">
-						<svg height="12" width="12" viewBox="0 0 24 24">
-							<rect
-								 width="1.6815412"
-								 height="13.900741"
-								 x="7.6217718"
-								 y="-4.5246339"
-								 transform="rotate(35.311213)"/>
-							<rect
-								 width="1.6815412"
-								 height="13.900741"
-								 x="4.6345911"
-								 y="10.300938"
-								 transform="matrix(-0.81602449,0.57801733,0.57801733,0.81602449,0,0)"/>
-							<rect
-								 width="1.6815412"
-								 height="13.900741"
-								 x="-12.059805"
-								 y="9.416481"
-								 transform="matrix(-0.81602449,0.57801733,0.57801733,0.81602449,0,0)"/>
-							<rect
-								 width="1.6815412"
-								 height="13.900741"
-								 x="24.316168"
-								 y="-3.6401744"
-								 transform="rotate(35.311213)"/>
-						</svg>
-					</td>
-					<td class="separator">
-						<label>OR</label>
-					</td>
-				</tr>
+        <tr>
+          <td class="separator">OR</td>
+          <td class="separator">OR</td>
+        </tr>
 				<tr>
 					<td>
 						<div class="left">
-							<label for="filesize">Split the input to</label>
+							<label for="filesize">1.b - Chunks size to split the input file</label>
 							<input id="filesize" type="number" min=10>
 						</div>
 						<div class="right">
@@ -110,13 +78,11 @@
 							<input type="radio" id="kb" name="filesize"><label for="kb">KB</label>
 							<input type="radio" id="mb" name="filesize"><label for="mb">MB</label>
 							<input type="radio" id="gb" name="filesize"><label for="gb">GB</label>
-							<label>chunks.</label>
 						</div>
 					</td>
-					<td></td>
 					<td>
 						<div class="left">
-							<label for="fileextension">Choose a file extension </label>
+							<label for="fileextension">2.b - Choose a file extension </label>
 						</div>
 						<div class="right">
 							<select id="fileextension"></select>
@@ -126,20 +92,20 @@
 				<tr>
 					<td class="button center" title="Split">
 						<div id="split">
-							<div class='a'>Split - Download</div>
+							<div class='a'>Split & Download</div>
 							<div class='b'>Loading...</div>
 						</div>
 					</td>
-					<td></td>
 					<td class="button center" title="Merge">
 						<div id="merge">
-							<div class='a'>Merge - Download</div>
+							<div class='a'>Merge & Download</div>
 							<div class='b'>Loading...</div>
 						</div>
 					</td>
 				</tr>
 			</table>
 		</div>
+    <!-- -->
 		<script type="text/javascript" src="index.js"></script>
 	</body>
 </html>
