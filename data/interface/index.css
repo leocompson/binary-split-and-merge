@@ -4,7 +4,7 @@ body {
   border: 0;
   padding: 0;
   display: flex;
-  font-size: 12px;
+  font-size: 13px;
   overflow: hidden;
   flex-flow: column;
   font-family: monospace;
@@ -25,9 +25,9 @@ body {
 .toolbar table tr td {
   padding: 0;
   width: 42px;
-  color: #777;
+  color: #333;
   height: 42px;
-  font-size: 12px;
+  font-size: 13px;
   cursor: pointer;
   user-select: none;
   text-align: center;
@@ -39,7 +39,7 @@ body {
 }
 
 .toolbar table tr td svg {
-  fill: #777;
+  fill: #555;
   pointer-events: none;
   vertical-align: middle;
 }
@@ -65,13 +65,13 @@ body {
   position: relative;
   background-color: #fff;
   background: #fff url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAYAAADDPmHLAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAPYQAAD2EBqD+naQAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAIvSURBVHic7d2xLgRRGEfx79oRvRCFjgQVkn0QNJ5EIRGyhda7SDyHUiOhYAsiNqEk66psqGTEdUfO+XWT7Jf8i5NMscVESOJKtQeUNhjEVLO5vNj2rnnJz/u7108lNnVJU3tAcf2V2Twe37Q9e51JJxGxV2BRp0zVHqC6DADOAOAMAM4A4AwAzgDgDADOAOAMAM4A4AwAzgDgDADOAOAMAM4A4AwAzgDgDADOAOAMAM4A4AwAzgDgDADOAOAMAM4A4AwAzgDgDADOAOAMAM4A4AwAzgDgDADOAOAMAM4A4AwAzgDgDADOAOAMAM4A4AwAzgDgDADOAOAMAM4A4CafjTs+Xd7JEQc1xxSRUhM5b7S/i/vIMSywqKqcY3i0c7X98Tz5bNxbjvmUol9nVkE5//AuFiJi4Ve3dEBKefbzs68AOAOAMwA4A4AzADgDgDMAOAOAMwA4A4AzALjJfwEppVFEvqg5poScUi/lvPaD08eIuPvtPfWl2y9PtWb8lcHZylxvPH5ofZji5HDraq/ApE7xFQBnAHAGAGcAcAYAZwBwBgBnAHAGAGcAcAYAZwBwBgBnAHAGAGcAcAYAZwBwBgBnAHAGAGcAcAYAZwBwBgBnAHAGAGcAcAYAZwBwBgBnAHAGAGcAcAYAZwBwBgBnAHAGAGcAcAYAZwBwBgBnAHAGAGcAcAYAZwBwBgBnAHAGAGcAcAYA13z/k3/u/HLUW19abXv2Mt2MSsyRpO54BxisNnYwXujbAAAAAElFTkSuQmCC") no-repeat center center;
-  background-size: 16px;
+  background-size: 32px;
 }
 
 .fileio-td .info, .fileio-td .details {
   left: 0;
-  color: #555;
-  font-size: 12px;
+  color: #333;
+  font-size: 13px;
   overflow: hidden;
   user-select: none;
   position: absolute;
@@ -98,12 +98,13 @@ body {
 .fileio-td input {
   top: 0;
   border: 0;
-  color: #555;
+  color: #333;
   width: 100%;
   margin: auto;
   padding: 10px;
   cursor: pointer;
-  font-size: 12px;
+  font-size: 13px;
+  font-weight: 600;
   font-family: monospace;
   box-sizing: border-box;
   height: calc(100vh - 320px);
@@ -144,33 +145,35 @@ body {
   border-right: solid 1px rgba(0,0,0,0.1);
 }
 
-.actions table tr td:nth-child(3) {
+.actions table tr td:nth-child(2) {
   border-left: solid 1px rgba(0,0,0,0.1);
 }
 
 .actions table tr td svg {
-  fill: #777;
+  fill: #555;
   pointer-events: none;
 }
 
 .actions table tr td select {
   padding: 0;
-  color: #555;
   width: 100%;
   height: 42px;
   outline: none;
-  font-size: 12px;
+  color: #5985de;
+  font-size: 13px;
   background: #fff;
   text-indent: 5px;
+  font-weight: 600;
   font-family: monospace;
   border: solid 1px rgba(0,0,0,0.1);
 }
 
 .actions table tr td label {
-  color: #555;
+  color: #333;
   padding: 10px 0;
-  font-size: 12px;
+  font-size: 13px;
   max-width: 100%;
+  font-weight: 600;
   overflow: hidden;
   user-select: none;
   white-space: nowrap;
@@ -184,11 +187,12 @@ body {
   margin: 0;
   padding: 0;
   width: 100%;
-  color: #555;
   height: 42px;
   outline: none;
-  font-size: 12px;
+  color: #5985de;
+  font-size: 13px;
   background: #fff;
+  font-weight: 600;
   text-indent: 10px;
   font-family: monospace;
   box-sizing: border-box;
@@ -202,7 +206,7 @@ body {
 
 .actions .separator {
   padding: 0;
-  color: #555;
+  color: #333;
   height: 28px;
   font-weight: 600;
   user-select: none;
@@ -223,9 +227,10 @@ body {
   height: 42px;
   opacity: 0.95;
   cursor: pointer;
-  font-size: 12px;
+  font-size: 13px;
   overflow: hidden;
   font-weight: 600;
+  user-select: none;
   line-height: 42px;
   text-align: center;
   letter-spacing: 1px;
@@ -244,8 +249,14 @@ body {
 .button div[state='loading'] .b {display: inline}
 
 @media (max-width: 600px) {
+  .fileio-td {
+    background-size: 16px;
+  }
   .fileio-td input {
     height: 150px;
+  }
+  .actions {
+    border-bottom: solid 1px rgba(0,0,0,0.1);
   }
 }
 

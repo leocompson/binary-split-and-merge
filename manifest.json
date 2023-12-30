@@ -1,12 +1,14 @@
 {
-  "version": "0.1.1",
+  "version": "0.1.2",
   "manifest_version": 3,
   "offline_enabled": true,
   "name": "Binary Split & Merge",
-  "short_name": "binary-split-and-merge",
-  "permissions": ["storage", "downloads"],
   "homepage_url": "https://mybrowseraddon.com/binary-split-and-merge.html",
   "description": "Easily split or merge files via binary data buffer (ArrayBuffer) in your browser!",
+  "permissions": [
+    "storage", 
+    "downloads"
+  ],
   "commands": {
     "_execute_action": {}
   },

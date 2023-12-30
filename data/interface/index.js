@@ -24,7 +24,9 @@ var background = {
           "method": id,
           "data": data,
           "path": "interface-to-background"
-        }); 
+        }, function () {
+          return chrome.runtime.lastError;
+        });
       }
     }
   },
@@ -42,7 +44,7 @@ var background = {
   },
   "listener": function (e) {
     if (e) {
-      for (var id in background.message) {
+      for (let id in background.message) {
         if (background.message[id]) {
           if ((typeof background.message[id]) === "function") {
             if (e.path === "background-to-interface") {
@@ -58,7 +60,6 @@ var background = {
 };
 
 var config  = {
-  "resize": {"timeout": null},
   "split": {
     "buffers": [], 
     "element": null
@@ -92,7 +93,7 @@ var config  = {
   "store": {
     "interface": {
       "metrics": function () {
-        var tmp = document.querySelector("input[type='radio']:checked");
+        const tmp = document.querySelector("input[type='radio']:checked");
         /*  */
         if (tmp) config.storage.write("drop.bytes", tmp.id);
         config.storage.write("drop.size", config.drop.size.value);
@@ -105,7 +106,7 @@ var config  = {
   "retrieve": {
     "interface": {
       "metrics": function () {
-        var tmp = config.storage.read("drop.bytes");
+        const tmp = config.storage.read("drop.bytes");
         /*  */
         if (tmp !== undefined) document.getElementById(tmp).checked = true;
         config.drop.size.value = config.storage.read("drop.size") !== undefined ? config.storage.read("drop.size") : '';
@@ -121,7 +122,7 @@ var config  = {
       if (config.port.name === "win") {
         if (config.resize.timeout) window.clearTimeout(config.resize.timeout);
         config.resize.timeout = window.setTimeout(async function () {
-          var current = await chrome.windows.getCurrent();
+          const current = await chrome.windows.getCurrent();
           /*  */
           config.storage.write("interface.size", {
             "top": current.top,
@@ -137,7 +138,7 @@ var config  = {
     "name": '',
     "connect": function () {
       config.port.name = "webapp";
-      var context = document.documentElement.getAttribute("context");
+      const context = document.documentElement.getAttribute("context");
       /*  */
       if (chrome.runtime) {
         if (chrome.runtime.connect) {
@@ -165,7 +166,7 @@ var config  = {
     "write": function (id, data) {
       if (id) {
         if (data !== '' && data !== null && data !== undefined) {
-          var tmp = {};
+          let tmp = {};
           tmp[id] = data;
           config.storage.local[id] = data;
           chrome.storage.local.set(tmp, function () {});
@@ -182,10 +183,10 @@ var config  = {
         config.map.data = e;
         /*  */
         for (id in config.map.data) {
-          for (var i = 0; i < config.map.data[id].length; i++) {
-            var extensions = config.map.data[id];
-            var extension = extensions[i];
-            var type = id;
+          for (let i = 0; i < config.map.data[id].length; i++) {
+            let extensions = config.map.data[id];
+            let extension = extensions[i];
+            let type = id;
             /*  */
             var option = document.createElement("option");
             option.value = type;
@@ -207,7 +208,7 @@ var config  = {
     "chunks": 2,
     "type": null,
     "size": null,
-    "file": null,
+    "files": null,
     "reader": null,
     "element": null,
     "extension": null,
@@ -232,7 +233,7 @@ var config  = {
     "filesize": {
       "to": {
         "bytes": function (s) {
-          var target = document.querySelector("input[type='radio']:checked");
+          const target = document.querySelector("input[type='radio']:checked");
           if (target) {
             if (target.id === "b") return s.toFixed(2);
             if (target.id === "kb") return (s * Math.pow(2, 10)).toFixed(2);
@@ -245,7 +246,7 @@ var config  = {
     "bytes": {
       "to": {
         "filesize": function (s) {
-          var result = {'a': null, 'b': null};
+          const result = {'a': null, 'b': null};
           if (s) {
             if (s >= Math.pow(2, 30)) {
               result.b = "GB";
@@ -268,9 +269,9 @@ var config  = {
     }
   },
   "load": function () {
-    var reload = document.getElementById("reload");
-    var support = document.getElementById("support");
-    var donation = document.getElementById("donation");
+    const reload = document.getElementById("reload");
+    const support = document.getElementById("support");
+    const donation = document.getElementById("donation");
     /*  */
     config.drop.size = document.getElementById("filesize");
     config.drop.type = document.getElementById("filetype");
@@ -290,12 +291,12 @@ var config  = {
     }, false);
     /*  */
     support.addEventListener("click", function () {
-      var url = config.addon.homepage();
+      const url = config.addon.homepage();
       chrome.tabs.create({"url": url, "active": true});
     }, false);
     /*  */
     donation.addEventListener("click", function () {
-      var url = config.addon.homepage() + "?reason=support";
+      const url = config.addon.homepage() + "?reason=support";
       chrome.tabs.create({"url": url, "active": true});
     }, false);
     /*  */
@@ -334,11 +335,11 @@ var config  = {
     "interface": function () {
       if (config.drop.current) {
         if (config.drop.current.type) {
-          var ext = config.drop.current.name.split('.').pop();
+          const ext = config.drop.current.name.split('.').pop();
           config.map.file.extension.to.mime.type[ext] = config.drop.current.type;
-          var tmp = config.map.data[config.drop.current.type];
+          const tmp = config.map.data[config.drop.current.type];
           if (tmp) {
-            var index = tmp.indexOf(ext);
+            const index = tmp.indexOf(ext);
             if (index !== -1) {
               config.drop.type.value = config.drop.current.type;
               config.drop.extension.value = tmp[index];
@@ -350,17 +351,18 @@ var config  = {
       if (config.drop.files) {
         if (config.drop.files.length === 1) {
           if (config.drop.chunks.value) {
-            var segment = config.drop.current.size / config.drop.chunks.value;
-            var result = config.convert.bytes.to.filesize(segment);
+            const segment = config.drop.current.size / config.drop.chunks.value;
+            /*  */
+            const result = config.convert.bytes.to.filesize(segment);
             if (result) {
               config.drop.size.value = result.a;
-              var target = document.querySelector("input[type='radio'][id='" + result.b.toLowerCase() + "']");
+              const target = document.querySelector("input[type='radio'][id='" + result.b.toLowerCase() + "']");
               if (target) target.checked = true;
             }
           } else if (config.drop.size.value) {
-            var result = config.convert.filesize.to.bytes(config.drop.size.value);
+            const result = config.convert.filesize.to.bytes(config.drop.size.value);
             if (result) {
-              var chunks = config.drop.current.size / result;
+              const chunks = config.drop.current.size / result;
               config.drop.chunks.value = chunks;
             }
           }
@@ -370,10 +372,12 @@ var config  = {
       config.store.interface.metrics();
     },
     "active": function () {
-      var a = [...document.querySelectorAll(".actions table tr td div")];
-      var b = [...document.querySelectorAll(".actions table tr td input")];
-      var c = [...document.querySelectorAll(".actions table tr td label")];
-      var d = [...document.querySelectorAll(".actions table tr td select")];
+      let a = [], b = [], c = [], d = [];
+      //
+      a = [...document.querySelectorAll(".actions table tr td div")];
+      b = [...document.querySelectorAll(".actions table tr td input")];
+      c = [...document.querySelectorAll(".actions table tr td label")];
+      d = [...document.querySelectorAll(".actions table tr td select")];
       //
       [...a, ...b, ...c, ...d].map(e => {
         e.disabled = true;
@@ -383,10 +387,10 @@ var config  = {
         e.closest("td").style.backgroundColor = "#ffffff";
       });
       /*  */
-      var a = [...document.querySelectorAll(".actions[role='split'] table tr td:nth-child(1) div")];
-      var b = [...document.querySelectorAll(".actions[role='split'] table tr td:nth-child(1) input")];
-      var c = [...document.querySelectorAll(".actions[role='split'] table tr td:nth-child(1) label")];
-      var d = [...document.querySelectorAll(".actions[role='split'] table tr td:nth-child(1) select")];
+      a = [...document.querySelectorAll(".actions[role='split'] table tr td:nth-child(1) div")];
+      b = [...document.querySelectorAll(".actions[role='split'] table tr td:nth-child(1) input")];
+      c = [...document.querySelectorAll(".actions[role='split'] table tr td:nth-child(1) label")];
+      d = [...document.querySelectorAll(".actions[role='split'] table tr td:nth-child(1) select")];
       //
       [...a, ...b, ...c, ...d].map(e => {
         e.disabled = false;
@@ -396,10 +400,10 @@ var config  = {
         e.closest("td").style.backgroundColor = "#f5f5f5";
       });
       /*  */
-      var a = [...document.querySelectorAll(".actions[role='merge'] table tr td:nth-child(2) div")];
-      var b = [...document.querySelectorAll(".actions[role='merge'] table tr td:nth-child(2) input")];
-      var c = [...document.querySelectorAll(".actions[role='merge'] table tr td:nth-child(2) label")];
-      var d = [...document.querySelectorAll(".actions[role='merge'] table tr td:nth-child(2) select")];
+      a = [...document.querySelectorAll(".actions[role='merge'] table tr td:nth-child(2) div")];
+      b = [...document.querySelectorAll(".actions[role='merge'] table tr td:nth-child(2) input")];
+      c = [...document.querySelectorAll(".actions[role='merge'] table tr td:nth-child(2) label")];
+      d = [...document.querySelectorAll(".actions[role='merge'] table tr td:nth-child(2) select")];
       //
       [...a, ...b, ...c, ...d].map(e => {
         e.disabled = false;
@@ -413,15 +417,16 @@ var config  = {
   "listeners": {
     "merge": async function () {
       if (config.merge.element.getAttribute("state") === "loading") return;
-      config.merge.element.setAttribute("state", "loading");
+      if (config.drop.current === undefined) return window.alert("Please add a file(s) and try again.");
       /*  */
       config.file.type = config.drop.type.value;
       config.file.extension = config.drop.extension.value;
+      config.merge.element.setAttribute("state", "loading");
       /*  */
-      var extension = config.file.extension ? '.' + config.file.extension : '';
-      var type = config.file.type ? config.file.type : "application/octet-stream";
-      var blob = new Blob(config.merge.buffers, {"type": type});
-      var url = URL.createObjectURL(blob);
+      const extension = config.file.extension ? '.' + config.file.extension : '';
+      const type = config.file.type ? config.file.type : "application/octet-stream";
+      const blob = new Blob(config.merge.buffers, {"type": type});
+      const url = URL.createObjectURL(blob);
       /*  */
       chrome.downloads.download({"url": url, "filename": "merged" + extension}, function () {
         URL.revokeObjectURL(url);
@@ -430,39 +435,44 @@ var config  = {
     },
     "split": async function () {
       if (config.split.element.getAttribute("state") === "loading") return;
-      config.split.element.setAttribute("state", "loading");
+      if (config.drop.current === undefined) return window.alert("Please add a file(s) and try again.");
       /*  */
-      var i, j, tmp, count = 0;
-      var buffer = config.split.buffers[0];
-      var chunks = config.drop.chunks.value;
-      var bytes = Math.floor(buffer.byteLength / chunks);
-      for (i = 0, j = buffer.byteLength; i < j; i += bytes) {
-        count = count + 1;
-        await new Promise(function(resolve) {
-          /*  */
-          tmp = buffer.slice(i, i + bytes);
-          var blob = new Blob([tmp], {"type": "application/octet-stream"});
-          var filename = config.file.name + ".part.00" + count;
-          var url = URL.createObjectURL(blob);
-          /*  */
-          chrome.downloads.download({"url": url, "filename": filename}, function () {
-            URL.revokeObjectURL(url);
-            window.setTimeout(resolve, 300);
-            config.split.element.removeAttribute("state");
+      let i, j, tmp, count = 0;
+      let buffer = config.split.buffers[0];
+      let chunks = config.drop.chunks.value;
+      /*  */
+      if (buffer && chunks) {
+        let bytes = Math.floor(buffer.byteLength / chunks);
+        config.split.element.setAttribute("state", "loading");
+        /*  */
+        for (i = 0, j = buffer.byteLength; i < j; i += bytes) {
+          count = count + 1;
+          await new Promise(function(resolve) {
+            /*  */
+            tmp = buffer.slice(i, i + bytes);
+            const blob = new Blob([tmp], {"type": "application/octet-stream"});
+            const filename = config.file.name + ".part.00" + count;
+            const url = URL.createObjectURL(blob);
+            /*  */
+            chrome.downloads.download({"url": url, "filename": filename}, function () {
+              URL.revokeObjectURL(url);
+              window.setTimeout(resolve, 300);
+              config.split.element.removeAttribute("state");
+            });
           });
-        });
+        }
+        /*  */
+        config.store.interface.metrics();
       }
-      /*  */
-      config.store.interface.metrics();
     },
     "drop": async function () {
-      var target = config.drop.element;
+      const target = config.drop.element;
       if (target) {
         if (target.files) {
           config.drop.files = target.files;
-          var actions = document.querySelector(".actions");
+          const actions = document.querySelector(".actions");
           /*  */
-          var filesize = '', details = {'a': '', 'b': '', 'n': 0};
+          let filesize = '', details = {'a': '', 'b': '', 'n': 0};
           filesize = config.convert.bytes.to.filesize(config.drop.files[0].size);
           details.a = config.drop.files[0].name + " - " + filesize.a + filesize.b;
           filesize = config.convert.bytes.to.filesize([...config.drop.files].reduce((sum, e) => {return sum + (e ? e.size : 0)}, 0));
@@ -477,13 +487,13 @@ var config  = {
           target.disabled = true;
           config.update.active();
           /*  */
-          for (var i = 0; i < config.drop.files.length; i++) {
-            var file = config.drop.files[i];
-            if (file && file.name) {       
+          for (let i = 0; i < config.drop.files.length; i++) {
+            const file = config.drop.files[i];
+            if (file && file.name) {
               config.drop.current = file;
               config.file.type = config.drop.current.type;
               config.file.name = config.drop.current.name;
-              var buffer = await config.drop.async.read(config.drop.current);
+              const buffer = await config.drop.async.read(config.drop.current);
               if (buffer) {
                 config.update.interface();
                 config[config.drop.files.length === 1 ? "split" : "merge"].buffers.push(buffer);
