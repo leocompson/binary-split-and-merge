@@ -1,0 +1,38 @@
+html[theme="dark"] {
+  color-scheme: dark;
+}
+
+html[theme="dark"] body,
+html[theme="dark"] .actions {
+  background-color: #333333;
+}
+
+html[theme="dark"] .fileio-td,
+html[theme="dark"] .actions .separator,
+html[theme="dark"] .actions table tr td select,
+html[theme="dark"] .actions table tr td input[type='number'] {
+  background-color: #272727;
+}
+
+html[theme="dark"] .fileio,
+html[theme="dark"] .actions,
+html[theme="dark"] .actions table tr td,
+html[theme="dark"] .actions table tr td select,
+html[theme="dark"] .actions table tr td input[type='number'] {
+  border-color: rgb(255 255 255 / 15%);
+}
+
+html[theme="dark"] body,
+html[theme="dark"] .actions,
+html[theme="dark"] .fileio-td,
+html[theme="dark"] .fileio-td input,
+html[theme="dark"] .fileio-td .info,
+html[theme="dark"] .fileio-td .details,
+html[theme="dark"] .actions .separator,
+html[theme="dark"] .actions table tr td label {
+  color: #e7e7e7;
+}
+
+html[theme="dark"] .toolbar table tr td svg {
+  fill: #e7e7e7;
+}

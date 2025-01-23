@@ -179,6 +179,10 @@ var config  = {
   },
   "app": {
     "start": function () {
+      const theme = config.storage.read("theme");
+      const dark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+      document.documentElement.setAttribute("theme", theme !== undefined ? theme : (dark ? "dark" : "light"));
+      /*  */
       fetch("resources/map.json").then(r => r.json()).then(e => {
         config.map.data = e;
         /*  */
@@ -214,7 +218,7 @@ var config  = {
     "extension": null,
     "async": {
       "read": function (file) {
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve) => {
           config.drop.reader = new FileReader();
           config.drop.reader.onload = function (e) {
             if (e && e.target) {
@@ -269,6 +273,7 @@ var config  = {
     }
   },
   "load": function () {
+    const theme = document.getElementById("theme");
     const reload = document.getElementById("reload");
     const support = document.getElementById("support");
     const donation = document.getElementById("donation");
@@ -328,6 +333,14 @@ var config  = {
       }, false);
     });
     /*  */
+    theme.addEventListener("click", function () {
+      let attribute = document.documentElement.getAttribute("theme");
+      attribute = attribute === "dark" ? "light" : "dark";
+      /*  */
+      document.documentElement.setAttribute("theme", attribute);
+      config.storage.write("theme", attribute);
+    }, false);
+    /*  */
     config.storage.load(config.app.start);
     window.removeEventListener("load", config.load, false);
   },
@@ -373,6 +386,7 @@ var config  = {
     },
     "active": function () {
       let a = [], b = [], c = [], d = [];
+      let attribute = document.documentElement.getAttribute("theme");
       //
       a = [...document.querySelectorAll(".actions table tr td div")];
       b = [...document.querySelectorAll(".actions table tr td input")];
@@ -384,7 +398,7 @@ var config  = {
         e.closest("td").style.opacity = "0.50";
         e.closest("td").style.fontWeight = "normal";
         e.closest("td").style.cursor = "not-allowed";
-        e.closest("td").style.backgroundColor = "#ffffff";
+        e.closest("td").style.backgroundColor = attribute === "dark" ? "#333333" : "#ffffff";
       });
       /*  */
       a = [...document.querySelectorAll(".actions[role='split'] table tr td:nth-child(1) div")];
@@ -397,7 +411,7 @@ var config  = {
         e.closest("td").style.opacity = "1.00";
         e.closest("td").style.cursor = "default";
         e.closest("td").style.fontWeight = "600";
-        e.closest("td").style.backgroundColor = "#f5f5f5";
+        e.closest("td").style.backgroundColor = attribute === "dark" ? "#272727" : "#f5f5f5";
       });
       /*  */
       a = [...document.querySelectorAll(".actions[role='merge'] table tr td:nth-child(2) div")];
@@ -410,7 +424,7 @@ var config  = {
         e.closest("td").style.opacity = "1.00";
         e.closest("td").style.cursor = "default";
         e.closest("td").style.fontWeight = "600";
-        e.closest("td").style.backgroundColor = "#f5f5f5";
+        e.closest("td").style.backgroundColor = attribute === "dark" ? "#272727" : "#f5f5f5";
       });
     }
   },

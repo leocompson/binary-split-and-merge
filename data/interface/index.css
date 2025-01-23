@@ -4,10 +4,13 @@ body {
   border: 0;
   padding: 0;
   display: flex;
+  height: 100vh;
   font-size: 13px;
   overflow: hidden;
   flex-flow: column;
+  align-items: center;
   font-family: monospace;
+  justify-content: space-between;
 }
 
 .toolbar {
@@ -45,7 +48,6 @@ body {
 }
 
 .fileio {
-  flex: 1;
   width: 100%;
   margin: 0 auto;
   text-align: center;
@@ -84,13 +86,13 @@ body {
 
 .fileio-td .info {
   left: 10px;
-  bottom: 10px;
+  bottom: 12px;
   text-align: left;
 }
 
 .fileio-td .details {
   right: 10px;
-  bottom: 10px;
+  bottom: 12px;
   text-align: right;
   text-indent: 10px;
 }
@@ -105,9 +107,10 @@ body {
   cursor: pointer;
   font-size: 13px;
   font-weight: 600;
+  min-height: 200px;
   font-family: monospace;
   box-sizing: border-box;
-  height: calc(100vh - 320px);
+  height: calc(100vh - 365px);
   background-color: transparent;
 }
 
@@ -133,12 +136,27 @@ body {
 
 .actions table tr td {
   padding: 10px;
+  vertical-align: baseline;
 }
 
 .actions table tr td div {
   border: 0;
   padding: 0;
   box-sizing: border-box;
+}
+
+.actions table tr td div.left,
+.actions table tr td div.right {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.actions table tr td div.left {
+  display: flex;
+  flex-flow: column;
+  align-items: flex-start;
+  justify-content: center;
 }
 
 .actions table tr td:nth-child(1) {
@@ -157,13 +175,15 @@ body {
 .actions table tr td select {
   padding: 0;
   width: 100%;
-  height: 42px;
+  height: 48px;
   outline: none;
   color: #5985de;
-  font-size: 13px;
+  font-size: 14px;
+  cursor: pointer;
   background: #fff;
-  text-indent: 5px;
   font-weight: 600;
+  padding-left: 10px;
+  box-sizing: border-box;
   font-family: monospace;
   border: solid 1px rgba(0,0,0,0.1);
 }
@@ -183,14 +203,19 @@ body {
   text-overflow: ellipsis;
 }
 
+.actions table tr td label.wide {
+  font-size: 14px;
+  letter-spacing: 1px;
+}
+
 .actions table tr td input[type='number'] {
   margin: 0;
   padding: 0;
   width: 100%;
-  height: 42px;
+  height: 48px;
   outline: none;
   color: #5985de;
-  font-size: 13px;
+  font-size: 14px;
   background: #fff;
   font-weight: 600;
   text-indent: 10px;
@@ -207,34 +232,37 @@ body {
 .actions .separator {
   padding: 0;
   color: #333;
-  height: 28px;
+  height: 48px;
+  font-size: 14px;
   font-weight: 600;
   user-select: none;
   text-align: center;
   letter-spacing: 1px;
+  vertical-align: middle;
   background-color: whitesmoke;
 }
 
 .actions .button {
   border: 0;
-  padding: 5px 0;
+  padding: 0;
   cursor: pointer;
+  padding-bottom: 10px;
 }
 
 .actions .button div {
   color: #fff;
   margin: auto;
-  height: 42px;
+  height: 48px;
   opacity: 0.95;
   cursor: pointer;
-  font-size: 13px;
+  font-size: 14px;
   overflow: hidden;
   font-weight: 600;
   user-select: none;
-  line-height: 42px;
+  line-height: 52px;
   text-align: center;
   letter-spacing: 1px;
-  width: calc(100% - 15px);
+  width: calc(100% - 20px);
   background-color: #517edd;
   transition: 300ms ease all;
 }
@@ -251,12 +279,6 @@ body {
 @media (max-width: 600px) {
   .fileio-td {
     background-size: 16px;
-  }
-  .fileio-td input {
-    height: 150px;
-  }
-  .actions {
-    border-bottom: solid 1px rgba(0,0,0,0.1);
   }
 }
 
